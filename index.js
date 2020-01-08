@@ -15,7 +15,7 @@ const usersEntity = mongoose.model('User', userModel);
 middlewares
 */
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser());
 app.use(bodyParser.json());
 
 /*
@@ -35,7 +35,7 @@ app.get('/tasks', (req, res) => {
 });
 
 app.get('/tasks/:id', (req, res) => {
-    var taskId = req.params.id;
+    var taskId = req.body.id;
     tasksEntity.findOne({'_id': taskId}, '', function(err, task){
         if(!err){
             res.json({
@@ -50,10 +50,10 @@ app.get('/tasks/:id', (req, res) => {
 app.post('/task/create', (req, res) => {
     var data = req.body;
     var newTask = new tasksEntity(data);
-    newTask.save(function(err){
+    newTask.save(function(err, result){
         if(!err){
             res.json({
-                message:"taskCreated"
+                task: result
             });
         }else{
             res.status(500);
@@ -62,24 +62,26 @@ app.post('/task/create', (req, res) => {
 });
 
 app.post('/task/update', (req, res) => {
-    var {id, title, description, date, state, flag} = req.body;
+    console.log(req.body);
+    const {id, flag} = req.body;
     if(flag === 'update'){
+        const {title, description, date} = req.body;
         var toUpdate = {
+            title:title,
             description:description, 
             date:date,
             taskStatus: state
         };
     }else{
         var toUpdate = {
-            taskStatus: state
+            taskStatus: true
         };
     }
-    tasksEntity.findOneAndUpdate({_id: id},{
-        title:title, toUpdate
-    }, function(err){
+    tasksEntity.findByIdAndUpdate(id,toUpdate,{new:true}, function(err, result){
         if(!err){
             res.json({
-                message:'updated'
+                message:'updated',
+                result:result
             });
         }else{
             res.status(500);

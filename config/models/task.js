@@ -11,7 +11,7 @@ var schema = new mongoose.Schema({
         default:''
     },
     date:{
-        type:Date
+        type:String
     },
     taskStatus:{
         type:Boolean,
