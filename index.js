@@ -35,11 +35,11 @@ app.get('/tasks', (req, res) => {
 });
 
 app.get('/tasks/:id', (req, res) => {
-    var taskId = req.body.id;
+    var taskId = req.params.id;
     tasksEntity.findOne({'_id': taskId}, '', function(err, task){
         if(!err){
             res.json({
-                task:task
+                task:task	
             });
         }else{
             res.status(500);
