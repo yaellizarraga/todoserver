@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
+var config = require('./config.json');
 
-// We need to difine the URL
-var URL = process.env.URL || 'mongodb://172.17.0.2/todoapp';
+// We need to define the URL
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : config.env;
+var URL = process.env.URL || 'mongodb://' + config.mongo[env].host + '/todoapp';
 
 mongoose.set('useCreateIndex', true);
 

@@ -63,15 +63,19 @@ app.post('/task/create', (req, res) => {
 
 app.post('/task/update', (req, res) => {
     console.log(req.body);
-    const {id, flag} = req.body;
+    const {flag} = req.body;
+    const {id} = (flag==='update')?req.body.task:req.body;
     if(flag === 'update'){
-        const {title, description, date} = req.body;
+        const {title, description, date} = req.body.task;
         var toUpdate = {
             title:title,
             description:description, 
-            date:date,
-            taskStatus: state
+            date:date
         };
+    }else if(flag === 'notDone'){
+        var toUpdate = {
+            taskStatus:false
+        }
     }else{
         var toUpdate = {
             taskStatus: true
